@@ -1,0 +1,328 @@
+// TASK 1
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 15;
+
+function my_first_filter(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let y = 0; y < height; y = y + 1) {
+        for (let x = 0; x < width; x = x + 1) {
+            dest[y][x][0] = -45 + y  ; // invert red intensity
+            dest[y][x][1] = -145 + x ; // invert green intensity
+            dest[y][x][2] = 255 - y/3 - x/2; // invert blue intensity
+            dest[y][x][3] = 255;                // always 255
+        }
+    }
+}
+
+install_filter(my_first_filter);
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
+
+// TASK 2
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 15;
+
+function copy(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+           dest[i][j][0] = src[i][j][0];
+           dest[i][j][1] = src[i][j][1];
+           dest[i][j][2] = src[i][j][2];
+           dest[i][j][3] = src[i][j][3];
+        }
+    }
+}
+
+function crosshair(src, dest) {
+    const width = image_width();
+    const height = image_height();
+    function circle(i, j) { return i * i + j * j; }
+        for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+           dest[i][j][0] = src[i][j][0];
+           dest[i][j][1] = src[i][j][1];
+           dest[i][j][2] = src[i][j][2];
+           dest[i][j][3] = src[i][j][3];
+        }
+    }       
+        for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+           dest[height/2][j][0] = 255;
+           dest[i][j][1] = src[i][j][1];
+           dest[i][j][2] = src[i][j][2];
+           dest[i][j][3] = src[i][j][3];
+        }
+    }
+
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+             if ( (math_sqrt(circle(i - height/2 ,j - width/2))) / 25 % 2 >1 ) {
+           dest[i][width/2][0] = 255;
+           dest[i][j][1] = src[i][j][1];
+           dest[i][j][2] = 150 ;
+           dest[i][j][3] = src[i][j][3];
+        }
+    }
+}
+}
+
+install_filter(copy);
+install_filter(crosshair);  // use this filter when crosshair function is ready.
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
+
+// TASK 3
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 15;
+function zoom(factor) {
+function copy(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+           dest[i][j] = src[math_floor(i/factor) + math_floor(height/2 - height/(2 * factor)) ]
+                            [math_floor(j/factor) + math_floor(width/2 - width/(2 * factor)) ];
+        }
+    }
+    
+} 
+
+return copy;
+}
+
+install_filter(zoom(1.2));
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
+
+// TASK 4
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 15;
+
+function flip_vertically(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+            for (let k = 0; k < 4; k = k + 1) {
+                dest[i][j][k] = src[height - 1 - i][j][k];
+            }
+        }
+    }
+}
+
+function color_invert(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let i = 0; i < height; i = i + 1){
+        for (let j = 0; j < width; j = j + 1){
+            for (let c = 0; c < 4; c = c + 1) {
+                dest[i][j][c] = c < 3 ? 255 - src[i][j][c] : src[i][j][c];
+            }
+        }
+    }
+}
+
+
+function zoom(factor) {
+function copy(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+           dest[i][j] = src[math_floor(i/factor) + math_floor(height/2 - height/(2 * factor)) ]
+                            [math_floor(j/factor) + math_floor(width/2 - width/(2 * factor)) ];
+        }
+    }
+    
+} 
+
+return copy;
+}
+
+
+function make_image(width, height) {
+    const img = [];
+    for (let i = 0; i < height; i = i + 1) {
+        const row = [];
+        img[i] = row;
+        for (let j = 0; j < width; j = j + 1) {
+            const pixel = [];
+            row[j] = pixel;
+            for (let z = 0; z < 4; z = z + 1) {
+                pixel[z] = 255;
+            }
+        }
+    }
+    return img;
+}
+
+function stack(filter1, filter2) {
+    const temp1 = make_image(WIDTH, HEIGHT);
+    const temp2 = make_image(WIDTH, HEIGHT);
+
+    return (src, dest) => {
+        const width = image_width();
+        const height = image_height();
+        const half_height = math_floor(height / 2);
+
+        filter1(src, temp1);
+        filter2(src, temp2);
+
+        for (let i = 0; i < half_height; i = i + 1) {
+            dest[i] = temp1[i * 2];
+            dest[i + half_height] = temp2[i * 2];
+        }
+
+        // take last row from temp2, if height is odd
+        for (let i = half_height * 2; i < height; i = i + 1) {
+            dest[i] = temp2[i];
+        }
+    };
+}
+
+function beside(filter1, filter2) {
+   const temp3 = make_image(WIDTH, HEIGHT);
+    const temp4 = make_image(WIDTH, HEIGHT);
+    
+    return (src, dest) => {
+        const width = image_width();
+        const height = image_height();
+        const half_width = math_floor(width / 2);
+        
+        filter1(src, temp3);
+        filter2(src, temp4);
+   for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < half_width; j = j + 1) {
+            dest[i][j] = temp3[i][j * 2];
+            dest[i][j + half_width] = temp4[i][j * 2];
+        }
+        
+        for (let j = half_width * 2; j < width; j = j + 1) {
+            dest[i][j] = temp4[i][j];
+        }
+    }
+    };
+}
+
+ 
+
+install_filter(stack(beside(flip_vertically, color_invert),
+                     beside(copy_image, zoom(2))));
+
+// install_filter(stack(beside(flip_vertically, color_invert),
+                   // beside(copy_image, color_invert)));
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
+
+// TASK 5
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 15;
+
+function flip_vertically(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+            for (let k = 0; k < 4; k = k + 1) {
+                dest[i][j][k] = src[height - 1 - i][j][k];
+            }
+        }
+    }
+}
+
+function color_invert(src, dest) {
+    const width = image_width();
+    const height = image_height();
+
+    for (let i = 0; i < height; i = i + 1){
+        for (let j = 0; j < width; j = j + 1){
+            for (let c = 0; c < 4; c = c + 1) {
+                dest[i][j][c] = c < 3 ? 255 - src[i][j][c] : src[i][j][c];
+            }
+        }
+    }
+}
+
+function make_image(width, height) {
+    const img = [];
+    for (let i = 0; i < height; i = i + 1) {
+        const row = [];
+        img[i] = row;
+        for (let j = 0; j < width; j = j + 1) {
+            const pixel = [];
+            row[j] = pixel;
+            for (let z = 0; z < 4; z = z + 1) {
+                pixel[z] = 255;
+            }
+        }
+    }
+    return img;
+}
+
+function stack(filter1, filter2) {
+    const temp1 = make_image(WIDTH, HEIGHT);
+    const temp2 = make_image(WIDTH, HEIGHT);
+
+    return (src, dest) => {
+        const width = image_width();
+        const height = image_height();
+        const half_height = math_floor(height / 2);
+
+        filter1(src, temp1);
+        filter2(src, temp2);
+
+        for (let i = 0; i < half_height; i = i + 1) {
+            dest[i] = temp1[i * 2];
+            dest[i + half_height] = temp2[i * 2];
+        }
+
+        // take last row from temp2, if height is odd
+        for (let i = half_height * 2; i < height; i = i + 1) {
+            dest[i] = temp2[i];
+        }
+    };
+}
+
+function compose(filter1, filter2) {
+    return (src, dest) => {
+        filter1(src, dest);
+        filter2(dest, dest);
+} ;
+}
+
+install_filter(compose( flip_vertically, color_invert));
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
