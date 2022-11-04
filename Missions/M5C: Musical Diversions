@@ -1,0 +1,294 @@
+// TASK 1
+
+const drum_envelope = adsr(0.05, 0.95, 0, 0);
+
+function snare_drum(note, duration) {
+    function snare(duration) {
+        return make_sound((t) => math_random() / 2 - 1, duration);
+    }
+    return drum_envelope(snare(duration));
+                        
+}
+
+function bass_drum(note, duration) {
+    
+    const primes = list(
+        79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149
+        );
+        
+    function makesine(freq, duration){
+        return sine_sound(freq, duration);
+    }    
+    
+    function primesines(primes, makesine) {
+        return map( x=> makesine(x, duration), primes);
+    }
+
+    
+    return drum_envelope(simultaneously(primesines(primes, makesine)));    
+        /*
+    function isaprime(freq) {
+    return equal(freq, head(primes))
+           ? freq
+           : isaprime(tail(primes));
+        */
+    }
+
+
+
+
+function mute(note, duration) {
+   return silence_sound(duration);
+} 
+// Test
+/*
+play(snare_drum(50, 0.2));
+play(sine_sound(50, 0.2));
+play(violin(50, 0.2));
+play(bell(50, 0.2));
+play(noise_sound(0.2));
+play(trombone(50, 0.2));
+play(piano(50, 0.2));
+play(cello(50, 0.2));
+
+
+play(snare_drum(50, 0.2));
+play(bass_drum(50, 0.2)); */
+
+play(consecutively(list(snare_drum(50, 0.2), mute(0, 0.2), bass_drum(50, 0.2),
+                        mute(0, 0.2),
+                        snare_drum(50, 0.2), mute(0, 0.2), bass_drum(50, 0.2))));
+                        
+// TASK 2
+
+function generate_list_of_note(letter_name, list_of_interval) {
+
+    function converter(list_of_intervals, base) {
+        return is_null(list_of_intervals)
+               ? null
+               : pair(
+                   head(list_of_intervals) + base, 
+                   converter( 
+                       tail(list_of_intervals),
+                       head(list_of_intervals) + base
+            )
+        ); 
+    } 
+
+    
+    return append(list(letter_name_to_midi_note(letter_name)), 
+                    converter(list_of_interval, letter_name_to_midi_note(letter_name)));
+    
+    
+} 
+
+
+
+
+const major_scale_interval = list(2, 2, 1, 2, 2, 2, 1, -1, -2, -2, -2, -1, -2, -2);
+generate_list_of_note("C4", major_scale_interval);
+
+
+const c_major_scale = generate_list_of_note("C4", major_scale_interval);
+
+display(c_major_scale);
+
+function list_to_sound(list_of_midi_note, duration, instrument) {
+    function instrumental(note) {
+        return instrument(note, duration);
+    }
+    return consecutively(map(instrumental, 
+                             list_of_midi_note));
+}
+
+const c_major_scale_sound = list_to_sound(c_major_scale, 0.4, cello);
+play(c_major_scale_sound);
+
+const harmonic_minor_scale_interval = list(2, 1, 2, 2, 1, 3, 1, -1, -3, -1, -2, -2, -1, -2);
+
+const melodic_minor_scale_interval = list(2, 1, 2, 2, 2, 2, 1, -2, -2, -1, -2, -2, -1, -2);
+
+
+const c_harmonic_minor_scale = generate_list_of_note("C4", harmonic_minor_scale_interval);
+const c_harmonic_minor_scale_sound = list_to_sound(c_harmonic_minor_scale, 0.4, cello);
+play(c_harmonic_minor_scale_sound);
+
+const c_melodic_minor_scale = generate_list_of_note("C4", melodic_minor_scale_interval);
+const c_melodic_minor_scale_sound = list_to_sound(c_melodic_minor_scale, 0.4, cello);
+play(c_melodic_minor_scale_sound);
+
+// TASK 3
+
+function generate_list_of_note(letter_name, list_of_interval) {
+
+    function converter(list_of_intervals, base) {
+        return is_null(list_of_intervals)
+               ? null
+               : pair(
+                   head(list_of_intervals) + base, 
+                   converter( 
+                       tail(list_of_intervals),
+                       head(list_of_intervals) + base
+            )
+        ); 
+    } 
+    return append(list(letter_name_to_midi_note(letter_name)), 
+                    converter(list_of_interval, letter_name_to_midi_note(letter_name)));
+} 
+
+
+function list_to_sound(list_of_midi_note, duration, instrument) {
+    function instrumental(note) {
+        return instrument(note, duration);
+    }
+    return consecutively(map(instrumental, 
+                             list_of_midi_note));
+}
+
+
+const major_arpeggio_interval = list(4, 3, 5, 4, 3, 5); //4354 3543 5435
+const minor_arpeggio_interval = list(3, 4, 5, 3, 4, 5);
+const c_major_arpeggio_scale = generate_list_of_note("C4", major_arpeggio_interval);
+const major_arpeggio_interval_sound = list_to_sound(c_major_arpeggio_scale, 0.4, cello);
+
+display(c_major_arpeggio_scale);
+play(major_arpeggio_interval_sound);
+
+
+function generate_arpeggio(letter_name, list_of_interval) { // makes list of notes
+    return generate_list_of_note(letter_name, list_of_interval);
+}
+
+function arpeggiator_up(arpeggio, duration_each, instrument) {
+    function generate_arpeggio_up(arpeggio, initial, n) {
+        return is_null(arpeggio)
+               ? null 
+               : n === 0
+               ? generate_arpeggio_up(tail(initial), tail(initial), 4)
+               : pair(head(arpeggio), 
+                      generate_arpeggio_up(tail(arpeggio), initial, n - 1));
+    }
+    return length(arpeggio) < 4 || is_null(arpeggio)
+           ? silence_sound(0)
+           : list_to_sound(generate_arpeggio_up(arpeggio, arpeggio, 4),
+                           duration_each,
+                           instrument);
+
+}
+/*
+function arpeggiator_up(arpeggio, duration_each, instrument) { // 1234 2345 pattern
+    function a4(arppegio) {
+    return length(arppegio) >= 4
+           ? consecutively(list(
+               head(arppegio), head(tail(arppegio)), 
+               head(tail(tail(arppegio))), head(tail(tail(tail(arppegio)))), 
+                    a4(tail(arppegio))))
+           : silence_sound(0);
+    }   
+    return list_to_sound(a4(arpeggio), duration_each, instrument);
+} 
+
+// arppegiato_up(generate arppegio) */
+
+
+// Test
+play(arpeggiator_up(generate_arpeggio("C4", major_arpeggio_interval), 0.1, cello)); 
+
+// TASK 4
+
+function simplify_rhythm(rhythm) {
+    function rhythm_pair(rhythm, n) {
+        return n === 0
+               ? null
+               : append(simplify_rhythm(rhythm), rhythm_pair(rhythm, n - 1));
+    }
+    return is_list(rhythm)
+           ? is_number(head(rhythm))
+             ? rhythm
+             : append(simplify_rhythm(head(rhythm)), 
+                      (head(tail(rhythm))))
+           : rhythm_pair(head(rhythm), tail(rhythm));
+}
+
+
+
+
+// Test
+const my_rhythm = pair(list(pair(list(1,2,0,1), 2), list(1,3,0,1,3,1,0,3)), 3);
+const my_simple_rhythm = simplify_rhythm(my_rhythm);
+display_list(my_simple_rhythm);
+
+const correct_simple_rhythm = list(1,2,0,1,1,2,0,1,1,3,0,1,3,1,0,3,1,2,0,1,1,
+        2,0,1,1,3,0,1,3,1,0,3,1,2,0,1,1,2,0,1,1,3,0,1,3,1,0,3);
+equal(my_simple_rhythm, correct_simple_rhythm); 
+
+// TASK 5
+
+const drum_envelope = adsr(0.05, 0.95, 0, 0);
+function snare_drum(note, duration) {
+    function snare(duration) {
+        return make_sound((t) => math_random() / 2 - 1, duration);
+    }
+    return drum_envelope(snare(duration));
+                        
+}
+function bass_drum(note, duration) {
+    
+    const primes = list(
+        79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149
+        );
+        
+    function makesine(freq, duration){
+        return sine_sound(freq, duration);
+    }    
+    
+    function primesines(primes, makesine) {
+        return map( x=> makesine(x, duration), primes);
+    }
+    return drum_envelope(simultaneously(primesines(primes, makesine)));    
+
+    }
+function mute(note, duration) {
+   return silence_sound(duration);
+} 
+function simplify_rhythm(rhythm) {
+    function rhythm_pair(rhythm, n) {
+        return n === 0
+               ? null
+               : append(simplify_rhythm(rhythm), rhythm_pair(rhythm, n - 1));
+    }
+    return is_list(rhythm)
+           ? is_number(head(rhythm))
+             ? rhythm
+             : append(simplify_rhythm(head(rhythm)), 
+                      (head(tail(rhythm))))
+           : rhythm_pair(head(rhythm), tail(rhythm));
+}
+
+function percussions(distance, list_of_sounds, rhythm) {
+    const new_list_of_sounds = map(
+    n => list_ref(list_of_sounds, n),  simplify_rhythm(rhythm));
+    function percussions_helper(distance, list_of_sounds, start, stop) {
+    return start === stop
+      ? silence_sound(0)
+      : simultaneously(list(
+            consecutively(list(
+                silence_sound(distance * start), head(list_of_sounds))),
+         percussions_helper(distance, tail(list_of_sounds), start + 1, stop)));
+  }
+    return percussions_helper(distance,new_list_of_sounds, 0,
+                                        length(new_list_of_sounds));
+}
+
+
+// Test
+const my_mute_sound = mute(50, 0.7);
+const my_snare_drum = snare_drum(50, 0.7);
+const my_cello = cello(50, 0.7);
+const my_bell = bell(72, 1);
+play(percussions(0.5,
+         list(my_mute_sound,
+              my_snare_drum,
+              my_cello,
+              my_bell),
+         list(1,2,1,0,3,1,0)));
