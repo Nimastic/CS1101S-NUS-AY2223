@@ -1,0 +1,46 @@
+// TASK 1
+
+function steps(r1, r2, r3, r4){
+    return scale(1/2, overlay( overlay( translate(-1, -1, r4) , translate(-1, 1, r3)), overlay( translate(1, 1, r2), translate(1, -1, r1))));
+    // overlay two overlays, left overlay is above right overlay, left consist of the r4 on top of r3, right overlay consist of r2 above
+    // since left overlay takes up the top half of depth space, r4 will take up the first layer, r3 will take up the 2nd layer 1/4 of the depth space below
+    // since right overlay takes up the bottom half depth space, r2 will take up the 3rd layer, 2/4 of the depth space below 1st, r4 will take up the last layer
+}
+
+// Tests
+show(steps(rcross, triangle, corner, nova));
+hollusion(steps(rcross, triangle, corner, nova));
+anaglyph(steps(rcross, triangle, corner, nova));
+
+// TASK 2
+
+function cone(n, rune){
+         return n === 1
+                      ? rune
+                      : overlay_frac(( 1 - 1 / n ), scale(( 1 - 1 / n ), cone(n - 1, rune)) , rune);
+    // n = 4
+    // top scale: 1/4, 2nd scale: 2/4, 3rd scale 3/4, last scale: 4/4
+    
+    /* explanation: taking n = 4 as example;
+    context:  overlay_frac( ofrac, scale( sfrac, topcone ), bottomcone);
+    ofrac and sfrac are fractions of overlay_frac and scale functions respectively
+    
+    focus 1: scaling
+    when n = 4, using sfrac( 1 - 1 / n ), topcone(3) is scaled to 3/4, bottomcone(4) is scaled to 1
+    iterative process, n = 3, topcone(2) is scaled to 2/3*3/4= 2/4, topcone(3), now bottomcone(3), is left at scale 3/4
+    iterative process, n = 2, topcone(1) is scaled to 1/2*2/3*3/4= 1/4, topcone(2), now bottomcone(2), is left at scale 2/4
+    Hence, topcone(1), bottomcone(2), bottomcone(3), and bottomcone(4) are scaled to 1/4, 2/4, 3/4 and 4/4 respectively
+    
+    focus 2: depth space
+    when n = 4, using ofrac( 1 - 1 / n ), depthspace is divided into 4 sections, bottomcone(4) takes up the last 1/4 of the depthspace
+    when n = 3, top 3/4 depthspace is divided into 3 sections, bottomcone(3) takes up the last 1/3 of the top 3/4 depthspace, hence, last 2/4 of depthspace
+    when n = 2, top 2/4 depthspace is divided into 2 sections, bottomcone(3) takes up the last 1/2 of the top 2/4 depthspace, hence, last 3/4 of depthspace
+    when n = 1, topcone(1) takes the topspace
+    
+    Initially I noticed my shades of gray for my first solution was off so I decided to change my code
+    */
+}
+
+// Tests
+show(cone(4, circle));
+hollusion(cone(15, circle));
