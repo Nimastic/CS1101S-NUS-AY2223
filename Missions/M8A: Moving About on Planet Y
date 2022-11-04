@@ -1,0 +1,177 @@
+// TASK 1
+
+
+function ultrasonic_listener(n){
+    const distance_away = ev3_ultrasonicSensorDistance(ev3_ultrasonicSensor()) 
+                          / 10;
+    display(distance_away);
+    ev3_pause(1000);
+    // ev3 pauses the running of the code for 1 second, then proceeds on to
+    // recursively call ultrasonic_listener again
+    if(n < 5){
+        ultrasonic_listener(n + 1);
+    }
+}
+ultrasonic_listener(0);
+
+
+
+/*
+display(ev3_ultrasonicSensorDistance(ultrasonicSensor));
+ev3_ultrasonicSensorDistance(ultrasonicSensor);
+*/
+
+// TASK 2
+
+ev3_runForTime(ev3_motorD(), 10000, 100);
+ev3_runForTime(ev3_motorA(), 10000, 100);
+
+
+function ultrasonic_listener(){
+    const distance_away = ev3_ultrasonicSensorDistance(ev3_ultrasonicSensor()) / 10;
+    display(distance_away);
+    ev3_pause(1000);
+    // distance_away will have to be more 10cm for the code to be ran and
+    // transferred to the robot
+    if(distance_away > 20){
+        ultrasonic_listener();
+    } else {
+        ev3_motorStop;
+        ev3_runForTime(ev3_motorD(), 1500, -500);
+        ev3_runForTime(ev3_motorA(), 1500, -500);
+        ev3_pause(1500);
+    }
+}
+ultrasonic_listener();
+
+
+/*
+function obstacles() {
+ if (ev3_ultrasonicSensorDistance(ultrasonicSensor) <= 10) { 
+     // if bot is a certain distance from box
+     ev3_runForTime(ev3_motorD(), 1000, 1500); // reverse 30cm
+     ev3_runForTime(ev3_motorA(), 1000, 1500);
+     ev3_pause(1000); 
+ } else {
+     ev3_runForTime(ev3_motorD(), 1000, Infinity); // forward indefinitely
+     ev3_runForTime(ev3_motorA(), 1000, Infinity);
+     ev3_pause(1000); 
+ }
+
+} */
+
+
+
+// TASK 3
+
+function move() {
+    ev3_runForTime(ev3_motorD(), 10000, 100);
+    ev3_runForTime(ev3_motorA(), 10000, 100);
+}
+
+function move_forward(){
+    ev3_runForTime(ev3_motorD(), 3000, 300);
+    ev3_runForTime(ev3_motorA(), 3000, 300);
+    ev3_pause(3000);
+}
+
+function turn_left(){
+    ev3_runForTime(ev3_motorD(), 700, 280);
+    ev3_runForTime(ev3_motorA(), 700, -280);
+    ev3_pause(700);
+}
+
+function turn_right(){
+    ev3_runForTime(ev3_motorD(), 700, -280);
+    ev3_runForTime(ev3_motorA(), 700, 280);
+    ev3_pause(700);
+}
+
+function move_after() {
+    ev3_runForTime(ev3_motorD(), 10000, 100);
+    ev3_runForTime(ev3_motorA(), 10000, 100);
+    ev3_pause(10000);
+}
+
+
+function navigate_around(){
+    if(math_random() <= 0.5){
+        // turn left
+        turn_left();
+        
+        // move n distance
+        move_forward();
+
+        // then turn right
+        turn_right();        
+        move_after();
+
+    } else {
+        // turn right
+        turn_right();
+        
+        // move n distance
+        move_forward();
+        
+        // then turn left
+        turn_left();
+        move_after();
+    }
+    
+   
+}
+
+function ultrasonic_listener(){
+    const distance_away = ev3_ultrasonicSensorDistance(ev3_ultrasonicSensor()) / 10;
+    display(distance_away);
+    ev3_pause(1000);
+    // distance_away will have to be more 10cm for the code to be ran and
+    // transferred to the robot
+    if(distance_away > 40){
+        ultrasonic_listener();
+    } else {
+        ev3_motorStop;
+        navigate_around();
+    }
+}
+move();
+ultrasonic_listener();
+
+
+
+/*
+
+function obstacles() {
+ if (ev3_ultrasonicSensorDistance(ultrasonicSensor) <= 10) {
+     // if bot is 10cm away from box
+     if (math_random() <= 0.5) {
+         // randomly choose left or right
+               ev3_runForTime(ev3_motorD(), 200, 500);
+               ev3_runForTime(ev3_motorA(), 200, -500);
+               ev3_pause(1000); // rotate 90* left
+               ev3_runForTime(ev3_motorD(), 1000, 1500); // forward 30cm
+               ev3_runForTime(ev3_motorA(), 1000, 1500);
+               ev3_pause(1000); 
+               ev3_runForTime(ev3_motorD(), 200, -500);
+               ev3_runForTime(ev3_motorA(), 200, 500);
+               ev3_pause(1000); // rotate 90* right
+               
+               
+     } else {
+               ev3_runForTime(ev3_motorD(), 200, -500);
+               ev3_runForTime(ev3_motorA(), 200, 500);
+               ev3_pause(1000); // rotate 90* right
+               ev3_runForTime(ev3_motorD(), 1000, 1500); // forward 30cm
+               ev3_runForTime(ev3_motorA(), 1000, 1500);
+               ev3_pause(1000); 
+               ev3_runForTime(ev3_motorD(), 200, 500);
+               ev3_runForTime(ev3_motorA(), 200, -500);
+               ev3_pause(1000); // rotate 90* left
+     }
+ } else {
+     ev3_runForTime(ev3_motorD(), 1000, Infinity); // forward forever
+     ev3_runForTime(ev3_motorA(), 1000, Infinity);
+     ev3_pause(1000); 
+ }
+
+}
