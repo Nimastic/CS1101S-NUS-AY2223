@@ -1,0 +1,89 @@
+// TASK 1
+
+function sense_color(n){
+    const light = ev3_reflectedLightIntensity(ev3_colorSensor());
+    display(light);
+    ev3_pause(1000);
+    // ev3 pauses the running of the code for 1 second, then proceeds on to
+    // recursively call sense_color again
+    if (ev3_touchSensorPressed(ev3_touchSensor1())) {
+        //if touched, else statement wont be run
+    }
+    //if not touched, recurse
+    else if (n < 1000) {
+        sense_color(n + 1);
+    }
+}
+sense_color(0);
+
+// TASK 2
+
+function move_forward() {
+    ev3_runForTime(ev3_motorD(), 700, 100);
+    ev3_runForTime(ev3_motorA(), 700, 100);
+    ev3_pause(700);
+}
+
+function turn_left() {
+    ev3_runForTime(ev3_motorD(), 300, 80);
+    ev3_pause(700);
+}
+
+function turn_right() {
+    ev3_runForTime(ev3_motorA(), 400, 100);
+    ev3_pause(700);
+}
+
+function line_move() {
+    let light = ev3_reflectedLightIntensity(ev3_colorSensor());
+    while (!ev3_touchSensorPressed(ev3_touchSensor1())) {
+        light = ev3_reflectedLightIntensity(ev3_colorSensor());
+        display(light);
+        if (light > 20 ) { // if light turn left
+            turn_left();
+        } else { //else turn right
+            turn_right();
+        }      
+
+    }
+}
+
+line_move();
+
+// TASK 3
+
+function move_forward() {
+    ev3_runForTime(ev3_motorD(), 700, 100);
+    ev3_runForTime(ev3_motorA(), 700, 100);
+    ev3_pause(700);
+}
+
+function turn_left() {
+    ev3_runForTime(ev3_motorD(), 300, 80);
+    ev3_pause(700);
+}
+
+function turn_right() {
+    ev3_runForTime(ev3_motorA(), 400, 100);
+    ev3_pause(700);
+}
+
+function line_move() {
+    let light = ev3_reflectedLightIntensity(ev3_colorSensor());
+    while (!ev3_touchSensorPressed(ev3_touchSensor1())) {
+        light = ev3_reflectedLightIntensity(ev3_colorSensor());
+        display(light);
+        if (light > 20 ) { // if white turn left
+            turn_left();
+        } else { //else turn right
+            turn_right();
+        }      
+
+    }
+}
+
+line_move();
+
+
+
+
