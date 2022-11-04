@@ -1,0 +1,98 @@
+// TASK 1
+
+// feel free to add helper functions!
+
+function fractal(level, transformation, curve) {
+    return level === 0
+           ? curve
+           : transformation(fractal(level - 1, transformation, curve));
+}
+
+function levycize(curve) {
+    const f = math_sqrt(2) / 2;
+    const scaled_curve = (scale(f, f, 1))(curve);
+    return connect_rigidly(
+        (rotate_around_origin(0, 0, math_PI / 4))(scaled_curve),
+        (translate(0.5, 0.5, 0))
+            ((rotate_around_origin(0, 0, -math_PI / 4))(scaled_curve)));
+}
+
+// Test
+
+draw_connected_full_view_proportional(10000)
+    (fractal(5, levycize, unit_line));
+draw_connected_full_view_proportional(10000)
+    (fractal(11, levycize, unit_line));
+draw_connected_full_view_proportional(10000)
+    (fractal(25, levycize, unit_line));
+
+
+// TASK 2
+
+
+
+
+
+function dragonize(c) {
+    return put_in_standard_position(connect_ends 
+            ((rotate_around_origin(0, 0, - math_PI / 2))(invert(c)), (c)));
+            // invert first curve
+}
+
+
+
+function fractal(level, operator, curve) {
+  return level === 0 
+        ? curve 
+        : operator(fractal(level - 1, operator, curve));
+}
+
+function invert(curve) {
+    return t => curve(1 - t);
+}
+
+
+draw_connected_full_view_proportional(10000)
+   (fractal(2, dragonize, unit_line));
+ draw_connected_full_view_proportional(10000)
+   (fractal(5, dragonize, unit_line));
+draw_connected_full_view_proportional(10000)
+   (fractal(11, dragonize, unit_line));
+
+// TASK 3
+
+
+
+function fractal(level, operator, curve) {
+  return level === 0 
+        ? curve 
+        : operator(fractal(level - 1, operator, curve));
+}
+
+function kochize(curve) {
+    const up_60 = rotate_around_origin(0, 0, math_PI / 3);
+    const down_60 = rotate_around_origin(0, 0, - math_PI / 3);
+    return put_in_standard_position(
+               connect_ends(curve,
+                            connect_ends(up_60(curve),
+                                         connect_ends(down_60(curve),
+                                                      curve))));
+}
+
+
+function snowflake(n) {
+    return connect_ends( 
+            connect_ends((rotate_around_origin(0, 0, 2/3 * math_PI))
+                    (fractal(n, kochize, unit_line)),
+                    // rotate by 120deg
+            (fractal(n, kochize, unit_line))), 
+            
+            (rotate_around_origin(0, 0, -2/3 * math_PI))
+                    (fractal(n, kochize, unit_line)));
+                    // rotate in opp direction by 120deg
+}
+
+// Test
+draw_connected_full_view_proportional(10000)(snowflake(5));
+  
+  
