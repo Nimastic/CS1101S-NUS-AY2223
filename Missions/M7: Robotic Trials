@@ -1,0 +1,35 @@
+// TASK 1
+
+ev3_speak("life's good");
+
+// TASK 2
+
+// moving forward for 10cm
+ev3_runForTime(ev3_motorD(), 1000, 500);
+ev3_runForTime(ev3_motorA(), 1000, 500);
+ev3_pause(1000);
+
+// TASK 3
+
+// rotate on the spot = motorD forward, motorA backwards
+ev3_runForTime(ev3_motorD(), 200, 500);
+ev3_runForTime(ev3_motorA(), 200, -500);
+ev3_pause(1000);
+
+// TASK 4
+
+ev3_runForTime(ev3_motorD(), 1000, 500); // forward 10cm
+ev3_runForTime(ev3_motorA(), 1000, 500);
+ev3_pause(1000); 
+ev3_runForTime(ev3_motorD(), 200, 400);// rotate left for 90
+ev3_runForTime(ev3_motorA(), 200, -400);
+ev3_pause(1000);
+ev3_runForTime(ev3_motorD(), 500, 500);// forward 5cm
+ev3_runForTime(ev3_motorA(), 500, 500);
+ev3_pause(500);
+ev3_runForTime(ev3_motorD(), 200, -350);// rotate right for 90
+ev3_runForTime(ev3_motorA(), 200, 350);
+ev3_pause(1000);
+ev3_runForTime(ev3_motorD(), 1500, 500);// forward 15cm
+ev3_runForTime(ev3_motorA(), 1500, 500);
+ev3_pause(1500);
