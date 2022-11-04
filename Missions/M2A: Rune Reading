@@ -1,0 +1,74 @@
+// TASK 1
+
+function fractal(pic, n) {
+    return n === 1 
+                 ? pic
+                 : beside(pic, stack(fractal(pic, n-1), fractal(pic, n-1)));
+}
+/* recursive process - when n=1, pic will be shown, else
+                       when n=2, beside() will place 1 pic on the left, followed by a stack() on the right,
+                                 stack() contains 2 fractal(pic, 1) -> stacking 2 pics ontop of each other
+                       when n=3, beside() will place 1 pic on the left, followed by a stack() on the right,
+                                 stack() contains 2 fractal(pic, 2) -> stacking 2 fractal(pic, 2) ontop of each other, repeat when n=2,
+                                 .
+                                 .
+                                 .
+                       when n=m, beside() will place 1 pic on the left, followed by 2 stacked pic on the right, 4, 8, 16, .... 2^(m-1)
+*/
+// Test
+show(fractal(make_cross(rcross), 5));
+
+// TASK 2
+
+function hook(frac) {
+    return quarter_turn_right(stack_frac(frac, square, beside(square, blank)));
+}
+/*  stack_frac() makes the square occupy the top fraction of the box and the beside(square, blank), occupy the (1-frac) portion of the box
+    beside() places a square to the left of a blank rune
+    quarter_turn_right() rotates the box to the right by 1/4, giving the final answer
+
+    a possible alternative answer using beside_frac()
+    return beside_frac((1-frac), stack(square, blank), square);
+   
+*/
+// Test
+show(hook(1/5));
+
+// TASK 3
+
+function spiral(thickness, depth) {
+    return depth === 0
+                     ? show(blank)
+        :  depth === 1
+                     ? hookblank(thickness)
+                     : stack_frac(thickness, hook(thickness/2), quarter_turn_right(spiral(thickness, depth-1)));
+}
+/* recursive process - when depth = 0, blank pic will be shown, else
+                       when depth = 1, hookblank(); hook stacked on top of blank, will be shown. else
+                       when depth = 2, stack_frac() places hook(thickness/2) on top of quarter_turn_right()
+                                       whereby quarter_turn_right() contains spiral(thickness, 1);
+                                       hookblank(); will be rotated and stacked at the bottom
+                       when depth = m, stack_frac() places hook(thickness/2) on top of quarter_turn_right(),
+                                       recursive process continues into a spiral.
+*/
+
+
+function hookblank(frac) {
+    return stack_frac(frac, hook(frac/2), blank);    
+         
+}
+
+/* created hookblank() to stack hook on top of blank, this is used to separate case depth === 1, 
+and when depth > 1, after spiraling hook() using quarter_turn_right() and recursive process, last entry (depth === 1) will have hookblank
+modified hook(frac) to hook(frac/2) to fit case
+*/
+
+function hook(frac) {
+    return quarter_turn_right(stack_frac(frac, square, beside(square, blank)));
+}
+
+// hook() from Q2
+
+// Test
+show(spiral(1/5 , 20));
+
