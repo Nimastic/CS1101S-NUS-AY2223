@@ -1,0 +1,260 @@
+// Task 1
+
+function noise_sound(duration) {
+    const wave = t => math_random() * 2 - 1;
+    return make_sound(wave, duration);
+}
+
+function cut_sound(sound, duration) {
+    return make_sound(get_wave(sound), duration);
+} 
+
+
+// Play test sound.
+play(cut_sound(noise_sound(2), 1));
+play(noise_sound(2));
+
+// Task 2
+
+function sine_sound(freq, duration) {
+    const wave = t => math_sin(2 * math_PI * freq * t);
+    return make_sound(wave, duration);
+}
+
+// Play test sound.
+play(sine_sound(500, 1));
+play(sine_sound(300, 1));
+
+// Task 3
+
+function sine_sound(freq, duration) {
+    const wave = t => math_sin(2 * math_PI * freq * t);
+    return make_sound(wave, duration);
+}
+
+const my_sine_1 = sine_sound(500, 1);
+const my_sine_2 = sine_sound(750, 2);
+
+
+/* checking
+play(my_sine_1);
+play(my_sine_2);
+
+const my_sine_3 = sine_sound(200, 3);
+
+play(my_sine_3);
+
+const twoconsec = 
+t => t < 1
+    ? math_sin(2 * math_PI * 500 * t)
+    : math_sin(2 * math_PI * 750 * t);
+    
+const twoc = make_sound(twoconsec, 3);
+
+play(twoc); */
+
+
+
+function two_consecutively(s1, s2) {
+    const two_wave = t => t <= get_duration(s1) 
+                          ? get_wave(s1)( t ) 
+                            // get_duration is 1
+                          : get_wave(s2)( 
+                            (t - get_duration(s1))); 
+        // t > 1 onwards, wave = t => math_sin(2 * math_PI * freq * ( t > 1));
+    
+    function two_duration(s1, s2) {
+        return get_duration(s1) + get_duration(s2);
+    }
+           
+    return make_sound(two_wave, two_duration(s1, s2));
+}
+
+
+
+// Play test sound.
+play(two_consecutively(my_sine_1, my_sine_2));
+
+// Task 4
+
+function sine_sound(freq, duration) {
+    const wave = t => math_sin(2 * math_PI * freq * t);
+    return make_sound(wave, duration);
+}
+
+const my_sine_1 = sine_sound(500, 0.5);
+const my_sine_2 = sine_sound(750, 1);
+const my_sine_3 = sine_sound(625, 0.5);
+
+/* checking
+const twoconsec = 
+t => t < 0.5
+    ? math_sin(2 * math_PI * 500 * t)
+    : t < 1.5
+    ? math_sin(2 * math_PI * 750 * t)
+    : math_sin(2 * math_PI * 625 * t);
+    
+const twoc = make_sound(twoconsec, 2);
+
+play(twoc);
+*/
+
+function two_consecutively(s1, s2) {
+    const two_wave = t => t <= get_duration(s1) 
+                          ? get_wave(s1)( t ) 
+                          : get_wave(s2)( 
+                            (t - get_duration(s1))); 
+    
+    function two_duration(s1, s2) {
+        return get_duration(s1) + get_duration(s2);
+    }
+           
+    return make_sound(two_wave, two_duration(s1, s2));
+}
+
+// s1 is head(list_of_sounds)
+// s2 is head(tail(list_of_sounds))
+
+function consecutively(list_of_sounds) {
+    
+    function con_duration(list_of_sounds) {
+        return is_null(list_of_sounds)
+               ? 0
+               : tail(head(list_of_sounds)) + 
+                 con_duration(tail(list_of_sounds));
+    }
+    function con_wave(list_of_sounds, duration) {
+        return t => con_wave2(t, list_of_sounds, duration);
+    }
+    
+    function con_wave2(t, list_of_sounds, duration) {
+        return is_null(list_of_sounds)
+               ? 0
+               : t < duration + get_duration(head(list_of_sounds)) 
+               ? get_wave(head(list_of_sounds))( t - duration ) 
+               : con_wave2(t, tail(list_of_sounds), 
+                 duration + get_duration(head(list_of_sounds))); 
+    }
+    return make_sound
+            (con_wave(list_of_sounds, 0), con_duration(list_of_sounds));
+}
+    
+// Play test sound.
+play(consecutively(list(my_sine_1, my_sine_2, my_sine_3)));    
+    
+    /* ALL previous workings
+    
+    note to self: actually abit confused why i can declare t in a separate 
+    function but can't  declaring within con_wave2 function or as a 
+    constant declaration like two_consec on q3 
+    if there's any easier alternatives
+    
+    
+    
+    function con_wave(list_of_sounds, duration) {
+        return t => is_null(list_of_sounds)
+               ? 0
+               : t < get_duration(head(list_of_sounds)) + duration
+               ? get_wave(head(list_of_sounds))( t - duration ) 
+               : con_wave(tail(list_of_sounds), 
+               get_duration(head(list_of_sounds)) + duration); 
+    }                      
+    return is_null(list_of_sounds)
+           ? null
+           : length(list_of_sounds) === 1
+           ? make_sound(get_wave(head(list_of_sounds)), 
+             get_duration(head(list_of_sounds)))
+           : length(list_of_sounds) === 2
+           ? two_consecutively(head(list_of_sounds), 
+             head(tail(list_of_sounds)))
+           : two_consecutively(head(list_of_sounds), 
+             (two_consecutively(head(tail(list_of_sounds)), 
+             head(tail(tail(list_of_sounds)))))
+             );
+    const two_wave = t => t <= get_duration(s1) 
+    ? get_wave(head(list_of_sound))(get_duration(head(list_of_sound)) * t ) 
+    : get_wave(head(tail(list_of_sound)))
+        (get_duration(head(tail(list_of_sound))) * t ); 
+    
+    function two_duration(head(list_of_sound), head(tail(list_of_sound))) {
+        return get_duration(head(list_of_sound)) + 
+            get_duration(head(tail(list_of_sound)));
+    }
+           
+    return make_sound(two_wave, two_duration(s1, s2)); 
+    
+     
+    function con_wave(list_of_sounds, duration) {
+        return t => is_null(list_of_sounds)
+               ? 0
+               : t < get_duration(head(list_of_sounds)) + duration
+               ? get_wave(head(list_of_sounds))( t - duration ) 
+               : con_wave(tail(list_of_sounds), 
+               get_duration(head(list_of_sounds)) + duration); 
+    
+    
+    const con_wave = t => */
+    
+
+// Task 5
+
+function sine_sound(freq, duration) {
+    const wave = t => math_sin(2 * math_PI * freq * t);
+    return make_sound(wave, duration);
+}
+
+function two_consecutively(s1, s2) {
+    const two_wave = t => t <= get_duration(s1) 
+                          ? get_wave(s1)( t ) 
+                          : get_wave(s2)( 
+                            (t - get_duration(s1))); 
+    
+    function two_duration(s1, s2) {
+        return get_duration(s1) + get_duration(s2);
+    }
+    return make_sound(two_wave, two_duration(s1, s2));
+}
+
+function consecutively(list_of_sounds) {
+    function con_duration(list_of_sounds) {
+        return is_null(list_of_sounds)
+               ? 0
+               : tail(head(list_of_sounds)) + 
+                            con_duration(tail(list_of_sounds));
+    }
+    function con_wave(list_of_sounds, duration) {
+        return t => con_wave2(t, list_of_sounds, duration);
+    }
+    function con_wave2(t, list_of_sounds, duration) {
+        return is_null(list_of_sounds)
+               ? 0
+               : t < duration + get_duration(head(list_of_sounds)) 
+               ? get_wave(head(list_of_sounds))( t - duration ) 
+               : con_wave2(t, tail(list_of_sounds), 
+                 duration + get_duration(head(list_of_sounds))); 
+    }
+    return make_sound
+            (con_wave(list_of_sounds, 0), con_duration(list_of_sounds));
+}
+
+const dot_duration = 0.125;
+const dash_duration = 3 * dot_duration;
+
+// Create dot, dash and pause sounds first.
+const dot_sound = sine_sound(800, dot_duration);
+const dash_sound = sine_sound(800, dash_duration);
+const dot_pause = silence_sound(dot_duration);
+const dash_pause = silence_sound(dash_duration);
+
+// Create sounds for each letter.
+const S_sound = consecutively
+                (list(dot_sound, dot_pause, dot_sound, dot_pause, dot_sound));
+const O_sound = consecutively
+             (list(dash_sound, dot_pause, dash_sound, dot_pause, dash_sound));
+
+// Build the signal out of letter sounds and pauses.
+const distress_signal = consecutively
+                    (list(S_sound, dash_pause, O_sound, dash_pause, S_sound));
+
+// Play distress signal.
+play(distress_signal);
