@@ -1,0 +1,87 @@
+// TASK 1
+
+// import { draw_connected } from "curve";
+
+
+function reflect_through_y_axis(curve) {
+    return t => make_point( - x_of(curve(t)), y_of(curve(t))); 
+    // reflect by y-axis, x -> -x
+}
+
+function xaxis(y) {
+    return t => make_point(t, y);
+}
+
+function quarter_turn_left(curve) {
+    return t => make_point(-y_of(curve(t)), x_of(curve(t)));
+}
+
+function s_generator(pt) {
+    return t => t <= 0.5
+           ? make_point( 1 * math_cos( math_PI * 3 * t) - x_of(pt), 
+                         1 * math_sin( math_PI * 3 * t) - y_of(pt) + 1)
+           : make_point( 1 * math_cos( math_PI * 3 * t) - x_of(pt), 
+                       - 1 * math_sin( math_PI * 3 * t) - y_of(pt) - 1);
+}
+
+const my_s = s_generator(make_point(0,0));
+
+
+// draw_connected(200)(reflect_through_y_axis(my_s));
+
+(draw_connected_full_view_proportional(200)(reflect_through_y_axis(my_s)));
+
+// TASK 2
+
+// import { draw_connected } from "curve";
+
+function close(curve) {
+    return t => t <= 0.5    
+           ? make_point(x_of(curve(2 * t)), 
+                        y_of(curve(2 * t)))
+           : make_point(x_of(curve(2 - 2 * t)), 
+                        y_of(curve(2 - 2 * t)));
+}
+
+/* alternative answer I had before i realised the simpler answer :')
+
+function close(curve) {
+    return t => t <= 0.5    
+           ? make_point(x_of(curve(2 * t)), 
+                        y_of(curve(2 * t)))
+                    //0 < t < 0.5, produces S, from top to bottom direction
+           : t > 0.5 && t <= 0.75
+           ? make_point(x_of(curve(2 * t)), 
+                      - y_of(curve(2 * t)) - 2) 
+                    // 0.5  < t < 0.75 produces bottom half of S, from bottom to top direction
+           : t > 0.75
+           ? make_point(x_of(curve(2 * t)), 
+                        y_of(curve(2 * t)) + 2)     
+                    // 0.75 < t < 1 produces top half of S, from bottom to top direction, C'1 = C'0
+           : undefined;
+}
+*/
+
+
+
+function s_generator(pt) {
+    return t => t <= 0.5
+           ? make_point( 1 * math_cos( math_PI * 3 * t) - x_of(pt), 
+                         1 * math_sin( math_PI * 3 * t) - y_of(pt) + 1)
+           : make_point( 1 * math_cos( math_PI * 3 * t) - x_of(pt), 
+                       - 1 * math_sin( math_PI * 3 * t) - y_of(pt) - 1);
+}
+
+
+function reflect_through_y_axis(curve) {
+    return t => make_point( - x_of(curve(t)), y_of(curve(t))); 
+}
+
+const my_s_curve = s_generator(make_point(0,0));
+
+const my_s = s_generator(make_point(0,0));
+
+// draw_connected(200)(close(my_s));
+
+draw_connected_full_view_proportional(200)(close(my_s));
+draw_connected_full_view_proportional(200)(connect_ends(close(my_s_curve), reflect_through_y_axis(my_s_curve)));
