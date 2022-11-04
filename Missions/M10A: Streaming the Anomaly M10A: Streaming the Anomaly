@@ -1,0 +1,179 @@
+// TASK 1
+const A = [1, 2, 3, 4, 5];
+
+function array_to_stream(a) {
+    function helper(a, n) {
+        return n === array_length(a)
+               ? null
+               : pair(a[n], () => helper(a, n + 1));
+    }
+    //pair(A[n], () => A[n+1]);
+
+    return helper(a, 0);
+}
+
+array_length(A);
+array_to_stream(A);
+
+/* display(array_length(A) ===
+        stream_length(array_to_stream(A))); 
+
+
+display(array_length(anomaly_data) ===
+        stream_length(array_to_stream(anomaly_data))); */
+        
+        
+display(anomaly_data[7] ===
+        stream_ref(array_to_stream(anomaly_data), 7));
+        
+        
+// TASK 2
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 10;
+
+function array_to_stream(a) {
+    function helper(a, n) {
+        return n === array_length(a)
+               ? null
+               : pair(a[n], () => helper(a, n + 1));
+    }
+    return helper(a, 0);
+}
+
+function stream_to_filter(s) {
+    let A = s;
+    function helper(src, dest) {
+        if (!is_null(A)) {
+            copy_image(head(A), dest);
+            A = stream_tail(A);
+        } 
+    }
+    return helper;
+}
+    
+
+
+install_filter(stream_to_filter(array_to_stream(anomaly_data)));
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
+
+
+// TASK 3
+
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 10;
+
+function array_to_stream(a) {
+    function helper(a, n) {
+        return n === array_length(a)
+               ? null
+               : pair(a[n], () => helper(a, n + 1));
+    }
+    return helper(a, 0);
+}
+
+function stream_to_filter(s) {
+    let A = s;
+    function helper(src, dest) {
+        if (!is_null(A)) {
+            copy_image(head(A), dest);
+            A = stream_tail(A);
+        } 
+    }
+    return helper;
+}
+
+function loop(s) {
+    let copy = s;
+    function helper(s) {
+        if (is_null(stream_tail(s))) {
+            return pair(head(s), () => helper(copy));
+        } else {
+            return pair(head(s), () => helper(stream_tail(s)));
+        }
+    }
+    return helper(s);
+}
+
+
+install_filter(
+    stream_to_filter(
+        loop(array_to_stream(anomaly_data))));
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
+
+// TASK 4
+
+const FPS = 10;
+
+function array_to_stream(a) {
+    function helper(a, n) {
+        return n === array_length(a)
+               ? null
+               : pair(a[n], () => helper(a, n + 1));
+    }
+    return helper(a, 0);
+}
+
+function stream_to_filter(s) {
+    let A = s;
+    function helper(src, dest) {
+        if (!is_null(A)) {
+            copy_image(head(A), dest);
+            A = stream_tail(A);
+        } 
+    }
+    return helper;
+}
+
+function loop(s) {
+    let copy = s;
+    function helper(s) {
+        if (is_null(stream_tail(s))) {
+            return pair(head(s), () => helper(copy));
+        } else {
+            return pair(head(s), () => helper(stream_tail(s)));
+        }
+    }
+    return helper(s);
+}
+
+function time_lapse(s, n) {
+    let copy = s;
+    function helper(i, n) {
+        if (i % n === 0) {
+            copy = stream_tail(copy);
+            return pair(head(copy), () => helper(i + 1, n));
+            
+        } else {
+            copy = stream_tail(copy);
+            return helper(i + 1, n);
+            
+        }
+        
+    }
+    return helper(0, n);
+}
+
+
+
+
+install_filter(
+    stream_to_filter(
+        time_lapse(loop(array_to_stream(anomaly_data)),
+                   3)));
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
