@@ -1,0 +1,46 @@
+// Task 1
+
+function partition(xs, p) {
+    return pair(filter(x => x <= p, xs), filter(x => x > p, xs));
+}
+
+// Test
+const my_list = list(1, 2, 3, 4, 5, 6, 7, 8);
+partition(my_list, 4);
+partition(list(5,6,1,7,9,2), 6);
+
+// Task 2
+
+function partition(xs, p) {
+    return pair(filter(x => x <= p, xs), filter(x => x > p, xs));
+}
+
+function quicksort(xs) {
+    return is_null(xs)
+           ? xs
+           : length(xs) === 1
+           ? xs
+           : append(
+               quicksort(head(partition(tail(xs), head(xs)))),
+               pair(head(xs), quicksort(tail(partition(tail(xs), head(xs))))));
+                  
+           
+}
+// head((partition(tail(xs), head(xs)))) 12, -2, 0
+// tail((partition(tail(xs), head(xs)))) 56, 92
+// pair(head(xs), quicksort(tail(partition(tail(xs), head(xs))))) 23, 56, 92
+// Test
+const my_list = list(23, 12, 56, 92, -2, 0);
+quicksort(my_list);
+
+// TASK 3
+
+Θ(n)
+
+// TASK 4
+
+Θ(n^2)
+
+// TASK 5
+
+Θ(nlogn)
