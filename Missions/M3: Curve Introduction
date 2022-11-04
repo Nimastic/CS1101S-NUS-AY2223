@@ -1,0 +1,94 @@
+// TASK 1
+
+// Part 1
+// unit_line_at:(Number)-> Curve
+// takes a number and returns a horizontal curve, number is y-coordinate,
+// and Curve generates only points with the given y-coordinate
+
+
+// Part 2
+function vertical_line(pt, length) {
+   return y => make_point(x_of(pt), y_of(pt) + y * length);
+   }
+   
+draw_connected(20)(vertical_line(make_point(0.1, 0.1), 0.3));
+draw_connected(20)(vertical_line(make_point(0.1, 0.4), 0.4));
+draw_connected(20)(vertical_line(make_point(0.2, 0.4), 0.5));
+
+/*
+
+function vertical_line_at(x, y, length){
+    return y => make_point(x, y * length + y);
+}
+draw_connected(20)(vertical_line_at(0.3, 0.3, 0.3));
+draw_connected(20)(vertical_line_at(0.5, 0, 0.5));
+draw_connected(20)(vertical_line_at(0.3, 0.5, 0.9));
+
+*/
+
+// Part 3
+// vertical_line: (point, number) -> Curve
+// takes a point and a number, and returns a vertical line of length
+// of given number beginning from the given point towards positive-y direction
+
+
+// Part 4
+draw_connected(20)(vertical_line(make_point(0.5, 0.25), 0.5));
+
+// TASK 2
+
+function three_quarters(pt) {
+   return t => t < 3/4
+          ? make_point(math_cos(2 * math_PI * t) - x_of(pt), 
+                       math_sin(2 * math_PI * t) - y_of(pt))
+          : make_point(math_cos(2 * math_PI * (6/4 - t)) - x_of(pt),
+                       math_sin(2 * math_PI * (6/4 - t)) - y_of(pt));
+           
+}
+
+function unit_circle(t) {
+    return t < 3/4
+           ? make_point(math_cos(2 * math_PI * t), math_sin(2 * math_PI * t))
+           : make_point(math_cos(2 * math_PI * (6/4 - t)),
+                        math_sin(2 * math_PI * (6/4 - t)));
+          // 6/4 - t returns the parameter t to the opposite direction, 
+          // hence overlapping with 2/4-3/4 sector
+}
+
+/* alternative answer
+function three_quarters(pt) {
+    return t => 
+        make_point(math_cos(2 * math_PI * 3/4 * t), 
+                   math_sin(2 * math_PI * 3/4 * t));
+} */
+
+
+// Test
+draw_connected(200)(three_quarters(make_point(0,0)));
+draw_connected_full_view_proportional(200)(three_quarters(make_point(0.5, 0.25)));
+//draw_connected_full_view_proportional(200)(unit_circle);
+
+// TASK 3
+
+function s_generator(pt) {
+    return t => t <= 0.5
+           ? make_point( 1 * math_cos( math_PI * 3 * t) - x_of(pt), 
+                         1 * math_sin( math_PI * 3 * t) - y_of(pt) + 1)
+           : make_point( 1 * math_cos( math_PI * 3 * t) - x_of(pt), 
+                       - 1 * math_sin( math_PI * 3 * t) - y_of(pt) - 1);
+}
+
+// - x_of & y_of to translate the points given
+// +1, -1 to bring the centre of top & bottom circle up by 1, and down by 1 respectively
+// radius is 1 * at the front of math_cos/math_sin
+
+/* function s_generator(pt) {
+    return t => 
+        make_point(math_cos( math_PI * 3/2 * t), 
+                   math_sin( math_PI * 3/2 * t));
+} */
+
+// Test
+draw_connected_full_view_proportional(200)(s_generator(make_point(0.5, 0.25)));
+draw_connected(200)(s_generator(make_point(0.5, 0.25)));
+draw_connected(200)(s_generator(make_point(-0.5, -0.25)));
