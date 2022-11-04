@@ -1,0 +1,173 @@
+// TASK 1
+
+
+
+function red_rectangle_stream(s) {
+    let topi = HEIGHT;
+    let bottomi = 0;
+    let leftj = WIDTH;
+    let rightj = 0;
+    let red = [];
+    function helper(img) {
+        
+    for (let i = 0; i < HEIGHT; i = i + 1) { 
+        for (let j = 0; j < WIDTH; j = j + 1) {
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                        && img[i][j][2] === 0 ) {
+            bottomi = i;
+            } } } 
+    for (let i = 0; i < HEIGHT; i = i + 1) { 
+        for (let j = 0; j < WIDTH; j = j + 1) {
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                        && img[i][j][2] === 0 ) {
+                let temp = i;
+                if ( temp < topi ) {
+                topi = temp;
+            } } } }
+    for (let j = 0; j < WIDTH; j = j + 1) {
+        for (let i = 0; i < HEIGHT; i = i + 1) { 
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                        && img[i][j][2] === 0 ) {
+                rightj = j;
+            } } } 
+    for (let j = 0; j < WIDTH; j = j + 1) {
+        for (let i = 0; i < HEIGHT; i = i + 1) { 
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                        && img[i][j][2] === 0 ) {
+                let temp = j;
+                if ( temp < leftj ) {
+                leftj = temp;
+            } } } }
+    return pair(pair(topi, leftj), pair(bottomi, rightj));
+    // red = [[topi, leftj], [bottomi, rightj]];        
+    
+        }
+    return stream_map(helper, s);
+    }
+
+ 
+ head(red_rectangle_stream(anomaly_stream));
+// should evaluate to: [[141, 191], [159, 209]]
+
+//stream_ref(stream_ref(anomaly_stream, 0));
+
+
+// TASK 2
+
+function red_rectangle_stream(s) {
+    let topi = HEIGHT;
+    let bottomi = 0;
+    let leftj = WIDTH;
+    let rightj = 0;
+    let red = [];
+    function helper(img) {
+        
+    for (let i = 0; i < HEIGHT; i = i + 1) { 
+        for (let j = 0; j < WIDTH; j = j + 1) {
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                                && img[i][j][2] === 0 ) {
+            bottomi = i;
+            } } } 
+    for (let i = 0; i < HEIGHT; i = i + 1) { 
+        for (let j = 0; j < WIDTH; j = j + 1) {
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                                && img[i][j][2] === 0 ) {
+                let temp = i;
+                if ( temp < topi ) {
+                topi = temp;
+            } } } }
+    for (let j = 0; j < WIDTH; j = j + 1) {
+        for (let i = 0; i < HEIGHT; i = i + 1) { 
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                                && img[i][j][2] === 0 ) {
+                rightj = j;
+            } } } 
+    for (let j = 0; j < WIDTH; j = j + 1) {
+        for (let i = 0; i < HEIGHT; i = i + 1) { 
+            if ( img[i][j][0] === 255 && img[i][j][1] === 0 
+                                                && img[i][j][2] === 0 ) {
+                let temp = j;
+                if ( temp < leftj ) {
+                leftj = temp;
+            } } } }
+    return pair(pair(topi, leftj), pair(bottomi, rightj));
+    // red = [[topi, leftj], [bottomi, rightj]];        
+    
+        }
+    return stream_map(helper, s);
+    }
+
+
+function stream_combine(f, s1, s2) {
+    return pair(f(head(s1), head(s2)), 
+                () => stream_combine(f, stream_tail(s1), stream_tail(s2)));
+
+}
+
+
+// Trim the given image using the given rectangle.
+// Returns an image that includes all purely red
+// pixels of the given image.
+
+function trim(image, rectangle) {
+    const trimmed = [];
+    const i_min = head(head(rectangle));
+    const j_min = tail(head(rectangle));
+    const i_max = head(tail(rectangle));
+    const j_max = tail(tail(rectangle));
+
+    for (let i = i_min; i <= i_max; i = i + 1) {
+        const new_i = i - i_min;
+        trimmed[new_i] = [];
+        for (let j = j_min; j <= j_max; j = j + 1) {
+            const new_j = j - j_min;
+            trimmed[new_i][new_j] = image[i][j];
+        }
+    }
+    return trimmed;
+}
+
+
+
+const focused_stream = stream_combine(
+                           trim,
+                           anomaly_stream,
+                           red_rectangle_stream(anomaly_stream));
+                           
+head(focused_stream);
+
+
+
+
+
+// Should return a close-up of the anomaly, a 19x19 image of black,
+// red and white pixels.
+
+
+// TASK 3
+
+// Use your solutions of the previous tasks and
+// write other functions HERE that might be helpful
+// to answer the questions in this task.
+
+/*
+Q1: What color it might absorb?
+ANS: Blue
+
+
+Q2: What color of laser beam would you use?
+ANS: Blue
+
+
+Q3: Which part of the shield would you target?
+ANS: Centre
+
+
+Q4: How did you find the answer?
+ANS: There is a yellow star in the CENTRE of the seemingly white shield.
+     Yellow is reflected if some BLUE is absorbed 
+                                and green and red is reflected.
+     To inflict maximal damage, we should 
+                                focus more BLUE lase beam to be absorbed
+
+*/
