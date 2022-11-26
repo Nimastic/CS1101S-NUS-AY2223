@@ -1,0 +1,57 @@
+// My contest entry
+
+function runes_contest(pic) {
+    return overlay_frac(1/2, kaleidoscope(persian(red(flip_vert(triangle)), 6)), make_cross(kaleidoscope(persian(blue(flip_vert(corner)), 10))));
+}
+
+
+function fractal(pic, n) {
+    return n === 1 
+                 ? pic
+                 : beside(pic, stack(fractal(pic, n-1), fractal(pic, n-1)));
+}
+
+
+function mosaic(pic) {
+    return stack(beside(pink(fractal(flip_horiz(rcross), 2)), overlay(red(pentagram),orange(rcross))),(beside(pic,purple(fractal(flip_vert(rcross), 2)))));
+}
+
+
+// Test
+function kaleidoscope(pic) {
+    return stack(flip_vert(beside(mosaic(pic), flip_horiz(mosaic(pic)))), beside(mosaic(pic), flip_horiz(mosaic(pic))));
+}
+
+function persian(rune, n) {
+    return quarter_turn_right(
+        
+        beside_frac(1/n, stackn(n, quarter_turn_left(rune)), //1st row stacked runes
+        
+        beside_frac((1-1/(n-1)),                             //last row stacked runes
+        
+        quarter_turn_left(
+            
+        beside_frac(1/n, stackn(n-2, rune),                  //middle-left column stacked runes
+        
+        beside_frac((1-1/(n-1)),                             //middle-right column stacked runes
+        
+        make_cross(rune),                                   // make_cross centre rune
+        
+        stackn(n-2, rune)                                   //middle-right column stacked runes
+        
+        ))),                                                //middle-left column stacked runes
+  
+        stackn(n, quarter_turn_left(rune))                  //last row stacked runes
+
+        )));                                                //1st row stacked runes
+}
+
+
+
+// show(overlay_frac(1/2, kaleidoscope(persian(red(flip_vert(triangle)), 3)), make_cross(kaleidoscope(persian(red(flip_vert(corner)), 3)))));
+
+
+
+
+// Keep this show function call
+show(runes_contest(heart));
