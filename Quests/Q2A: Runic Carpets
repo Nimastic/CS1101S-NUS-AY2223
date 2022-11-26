@@ -1,0 +1,37 @@
+// TASK 1
+function persian(rune, n) {
+    return quarter_turn_right(
+        
+        beside_frac(1/n, stackn(n, quarter_turn_left(rune)), //1st row stacked runes
+        
+        beside_frac((1-1/(n-1)),                             //last row stacked runes
+        
+        quarter_turn_left(
+            
+        beside_frac(1/n, stackn(n-2, rune),                  //middle-left column stacked runes
+        
+        beside_frac((1-1/(n-1)),                             //middle-right column stacked runes
+        
+        make_cross(rune),                                   // make_cross centre rune
+        
+        stackn(n-2, rune)                                   //middle-right column stacked runes
+        
+        ))),                                                //middle-left column stacked runes
+  
+        stackn(n, quarter_turn_left(rune))                  //last row stacked runes
+
+        )));                                                //1st row stacked runes
+}
+
+
+
+
+
+
+// Tests
+show(persian(heart, 7));
+show(persian(make_cross(rcross), 5));
+const paw = from_url("https://i.imgur.com/GJg95B8.png");
+const dino = from_url("https://static.vecteezy.com/system/resources/previews/006/559/921/original/dinosaur-head-skeleton-hand-drawn-illustration-on-white-background-free-vector.jpg");
+show(persian(paw, 5));
+show(persian(dino, 6));
