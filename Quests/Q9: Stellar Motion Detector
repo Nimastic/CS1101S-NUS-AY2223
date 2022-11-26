@@ -1,0 +1,167 @@
+// TASK 1 without array
+// TASK 1
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 15;
+
+// Any helper functions and constants go here.
+
+
+function maximum(array){ // max value in array
+   let len = array_length(array);
+   let max = 0;
+   for (let i= 0; i<len; i= i+1){
+       if(array[i]>max){
+           max=array[i];
+       }
+   }
+   return max; 
+}
+
+function minimum(array){ // min value in array
+   let len = array_length(array);
+   let min = 255;
+   for (let i= 0; i<len; i= i+1){
+       if(array[i]<min){
+           min=array[i];
+       }
+   }
+   return min; 
+}
+                
+
+function stellar_motion_detector(src, dest) {
+    const width = image_width();
+    const height = image_height();
+    let ecounteri = 0;
+    let ecounterj = 0;
+    let lcounteri = 0;
+    let lcounterj = 0;
+
+    for (let i = 0; i < height; i = i + 1) { 
+        for (let j = 0; j < width; j = j + 1) {
+            if (dest[i][j][0] < src[i][j][0] && src[i][j][0] === 255 ) {
+                ecounteri = i ;
+                ecounterj = j ;
+            } else if (dest[i][j][0] > src[i][j][0] && dest[i][j][0] === 255 
+                                                    && src[i][j][0] <= 150) {
+                lcounteri = i ;
+                lcounterj = j;
+            }
+            
+        }
+    }
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+            if( 
+              i >= lcounteri /* top of red to bottom of screen */
+              && i <= ecounteri /* bot of red to top of screen */
+              && j >= lcounterj  /* left of red to right of screen */
+              && j <= ecounterj  /* right of red to left of screen */
+                ){
+                dest[i][j][0] = src[i][j][0];
+                dest[i][j][1] = src[i][j][1];
+                dest[i][j][2] = 255;
+                dest[i][j][3] = src[i][j][3];
+            } else {
+                dest[i][j][0] = src[i][j][0];
+                dest[i][j][1] = src[i][j][1];
+                dest[i][j][2] = src[i][j][2];
+                dest[i][j][3] = src[i][j][3];
+            }
+             
+        } 
+            
+    }
+
+    
+}
+
+install_filter(stellar_motion_detector);
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
+
+// TASK 1 with array
+// TASK 1
+
+const WIDTH = 400;
+const HEIGHT = 300;
+const FPS = 15;
+
+// Any helper functions and constants go here.
+
+
+function maximum(array){
+   let len = array_length(array);
+   let max = 0;
+   for (let i= 0; i<len; i= i+1){
+       if(array[i]>max){
+           max=array[i];
+       }
+   }
+   return max; 
+}
+
+function minimum(array){
+   let len = array_length(array);
+   let min = 255;
+   for (let i= 0; i<len; i= i+1){
+       if(array[i]<min){
+           min=array[i];
+       }
+   }
+   return min; 
+}
+                
+
+function stellar_motion_detector(src, dest) {
+    const width = image_width();
+    const height = image_height();
+    const bluei = [];
+    const bluej = [];
+    let counteri = 0;
+    let counterj = 0;
+
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+            if(dest[i][j][0]<src[i][j][0] &&src[i][j][0]===255){
+                bluei[counteri]=i;
+                bluej[counterj]=j;
+                counteri = counteri + 1;
+                counterj = counterj + 1; 
+            } 
+            
+        }
+    }
+    for (let i = 0; i < height; i = i + 1) {
+        for (let j = 0; j < width; j = j + 1) {
+            if(i >= minimum(bluei) && i <= maximum(bluei)
+                && j >= minimum(bluej) && j <= maximum(bluej) ){
+                dest[i][j][0] = src[i][j][0];
+                dest[i][j][1] = src[i][j][1];
+                dest[i][j][2] = 255;
+                dest[i][j][3] = src[i][j][3];
+            } else {
+                dest[i][j][0] = src[i][j][0];
+                dest[i][j][1] = src[i][j][1];
+                dest[i][j][2] = src[i][j][2];
+                dest[i][j][3] = src[i][j][3];
+            }
+             
+        } 
+            
+    }
+
+    
+}
+
+install_filter(stellar_motion_detector);
+
+set_dimensions(WIDTH, HEIGHT);
+keep_aspect_ratio(true);
+set_fps(FPS);
+start();
