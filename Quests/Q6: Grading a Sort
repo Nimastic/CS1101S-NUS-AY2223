@@ -1,0 +1,79 @@
+// TASK 1
+/*
+
+Describe your solution here, including
+its order of growth.
+
+
+You will get full XP only for
+a solution that has an order of growth
+O(n²) and that does not have an order
+of growth Θ(n²).
+
+
+Using merge sort, we take list(3, 2, 4, 1)
+during return merge(merge_sort(
+                        take(list(3, 2, 4, 1), 2)),
+                    merge_sort(
+                        drop(list(3, 2, 4, 1), 2)));
+so on and forth
+
+during the merge function
+if x > y, add 1 to the counter
+
+repeat for 2nd position, then 3rd position and to the last
+
+*/
+
+// TASK 2
+function graderVer1(arr) {
+    function merge_sort(xs) {
+        if (is_null(xs) || is_null(tail(xs))) {
+            return xs;
+        } else {
+            const mid = middle(length(xs));
+            return merge(merge_sort(take(xs, mid)),
+                         merge_sort(drop(xs, mid)), 0);
+                    }
+    }
+    function middle(n) {
+        return math_floor(n / 2);
+    }
+    function take(xs, n) {
+        if (n === 0) {
+            return null;
+        } else {
+            return pair(head(xs), take(tail(xs), n - 1));
+        }
+    }
+    function drop(xs, n) {
+        if (n === 0) {
+            return xs;
+        } else {
+            return drop(tail(xs), n - 1);
+        }
+    }
+    function merge(xs, ys, counter) {
+        if (is_null(xs)) {
+            return ys;
+        } else if (is_null(ys)) {
+            return xs;
+        } else {
+            const x = head(xs);
+            const y = head(ys);
+            return x < y
+                   ? pair(x, merge(tail(xs), ys))
+                   : pair(y, merge(xs, tail(ys)));
+
+        }
+    }
+    
+    
+    
+
+}
+
+
+// TASK 3
+
+// TASK 4
