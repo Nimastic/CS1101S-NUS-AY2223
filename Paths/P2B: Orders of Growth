@@ -1,0 +1,24 @@
+// TASK 1
+The function t has order growth of Θ(n).
+
+// TASK 2
+The function s has order growth of Θ(n).
+
+// TASK 3
+The function t has order growth of Θ(n).
+
+// TASK 4
+The function s has order growth of Θ(1).
+
+// TASK 5
+The function t has order growth of Θ(2^n).
+
+// TASK 6
+a*n
+
+// TASK 7
+The function t has order growth of Θ(n).
+
+// TASK 8
+The function t has order growth of Θ(log(n)).
+
