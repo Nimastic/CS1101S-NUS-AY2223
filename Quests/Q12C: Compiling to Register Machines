@@ -1,0 +1,49 @@
+// TASK 1
+function fib_machine() {
+    return make_machine(
+        list( "a", "b", "n" ), //
+            list( //
+                list("=", binary_function((a, b) => a === b)),
+                list("+", binary_function((a, b) => a + b)),
+                list("-", binary_function((a, b) => a - b))
+        ),  //
+        list("returnfib",
+            test(op("="), reg("n"), constant(0)),
+            branch(label("done")),
+            assign("b", list(op("+"), reg("a"), reg("b"))),
+            assign("a", list(op("-"), reg("b"), reg("a"))),
+            assign("n", list(op("-"), reg("n"), constant(1))),
+            go_to(label("returnfib")),
+            "done"
+        )
+    );
+}
+
+
+// TASK 2
+
+function pascal_machine() {
+    return make_machine(
+        list("a", "b", "val", "n", "s"), //
+            list(list("+", binary_function((a, b) => a + b)),//
+                list("-", binary_function((a, b) => a - b)),
+                list("*", binary_function((a, b) => a * b)),
+                list("//", binary_function((a, b) => math_floor(a / b))),
+                list("=", binary_function((a, b) => a === b))),
+                    list(assign("val", list(constant(1))), // 
+                        assign("n", list(constant(0))),
+                        test(op("="), reg("b"), reg("a")),
+                        branch(label("new")),"repeat",
+                        test(op("="), reg("n"), reg("a")),
+                        branch(label("over")),
+                        assign("s", list(op("-"), reg("b"), reg("n"))),
+                        assign("val", list(op("*"), reg("val"), reg("s"))),
+                        assign("s", list(op("+"), reg("n"), constant(1))),
+                    assign("val", list(op("//"), reg("val"), reg("s"))),
+             assign("n", list(op("+"), reg("n"), constant(1))),
+             go_to(label("repeat")),
+             "new",
+             assign("a", list(op("-"), reg("b"), reg("a"))),
+             go_to(label("repeat")),
+             "over"));
+}
