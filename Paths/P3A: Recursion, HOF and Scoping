@@ -1,0 +1,170 @@
+// TASK 1
+const DONT_CARE = undefined; // Ignore this, do not edit.
+
+// When thinking about base cases,
+// do the simplest thing possible
+// and leave the hard work to the computer.
+
+function choose(n, r) {
+    return (n < r) // Change this condition.
+           ? 0
+           : (r === n || r === 0) // Change this condition.
+	       ? 1
+           : DONT_CARE; // DO NOT EDIT.
+}
+
+// the autograder is marking me correct when nCr=1, eg 10C10=1 was previously undefined
+// am i tripping
+
+choose(10,10);
+
+
+
+
+
+
+// TASK 2
+// Suppose you need to choose R items from N items.
+// Consider the first item.
+// - We can either choose it, or not choose it.
+
+// If we choose the first item:
+// - How many more items must we choose from the remaining N - 1 items?
+const CHOOSE_FIRST_ITEM = choose(N - 1, R - 1); // Edit arguments only.
+// Example: choose(N + 4, R - 7);
+
+// If we don't choose the first item:
+// - How many more items must we choose from the remaining N - 1 items?
+const NOT_CHOOSE_FIRST_ITEM = choose(N - 1, R); // Edit arguments only.
+
+// Express your answers in terms of choose, N and R.
+// They have been pre-declared.
+
+
+
+
+
+
+// TASK 3
+function choose(n, r) {
+    return ( n < r ) 
+           ? 0
+           : ( r === n || r === 0 ) 
+	       ? 1
+           : n * choose( n - 1, r ) / (( n - r )); 
+/* e.g. 8C3
+8 > 3; hence alternative1
+3 /= 8, nore 8 = 0; hence alternative 2
+8 * choose(7, 3) / ( 8 - 3 );
+8 * 7 * choose(6 , 3) / ( 5 * 4 );
+8 * 7 * 6 * choose(5 , 3) / ( 5 * 4 * 3 );
+8 * 7 * 6 * 5 * choose(4 , 3) / ( 5 * 4 * 3 * 2 );
+8 * 7 * 6 * 5 * 4 * choose(3 , 3) / ( 5 * 4 * 3 * 2 * 1 ); r === n, 3 === 3;
+hence 8 * 7 * 6 * 5 * 4 * 1 / ( 5 * 4 * 3 * 2 * 1 )  = 6720 / 120 = 56
+
+using Pascal's nCr formula to check
+
+nCr = n!/(r!(n-1)!)
+8C3 = 8!/(3!5!)
+8!/3! = 8 * 7 * 6 * 5 * 4 = 6720
+5! = 5 * 4 * 3 * 2 * 1 = 120
+hence, 8C3 = 56
+
+*/
+
+    
+}
+
+choose(8 , 3);
+
+
+
+
+
+// TASK 4
+// Sum the first n odd natural numbers.
+
+
+function term(x) {
+    return x;
+}
+
+function next(x) {
+    return x + 2;
+}
+
+
+function sum_odd(n) {
+    // YOUR SOLUTION HERE
+    return sum(term, 1, next, 2 * n);
+}
+
+/* sum_odd(3), n /= 0;
+sum(term, 1, next, 6), a > b = false: 1 > 6 = false
+-> 1 + sum(term, 3, next, 6), 3 > 6 = false
+-> 1 + 3 + sum(term, 5, next, 6), 5 > 6 = false
+-> 1 + 3 + 5 + sum(term, 7, next, 6), 7 > 6 = true; return 0;
+-> 1 + 3 + 5 + 0 = 9 
+*/
+
+
+
+
+
+
+// TASK 5
+// Sum the first n odd numbers less than or equal to n.
+function term(x) {
+    return x;
+}
+
+function next(x) {
+    return x + 2;
+}
+
+function sum_odd_lte(n) {
+    return sum(term, 1, next, n);
+}
+
+sum_odd_lte(5);
+
+
+
+
+
+// TASK 6
+function accumulate(combiner, term, a, next, b, base) {
+    if (base === 0) { 
+        return a > b
+        ? 0
+        : term(a) + sum(term, next(a), next, b);
+    } else { 
+        return a > b
+        ? 1
+        : term(a) * product(term, next(a), next, b);
+}  }
+// if else statement, if base = 0, sum function is called out
+// else when base /= 0, e.g. 1, fact function is called out
+
+function term(x) {
+    return x;
+}
+
+function next(x) {
+    return x + 1;
+}
+
+function sum(term, a, next, b) {
+    return accumulate( (x, y) => x + y, term, a, next, b, 0);
+}
+
+function product(term, a, next, b) {
+    return accumulate( (x, y) => x * y, term, a, next, b, 1);
+}
+
+function fact(n) {
+    return product(x => x, 1, x => x + 1, n);
+}
+
+sum(term, 1, next, 2);
+
