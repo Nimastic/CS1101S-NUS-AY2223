@@ -1,0 +1,88 @@
+// TASK 1
+function besiden(n, rune) {
+    return n === 1
+           ? rune
+           : beside_frac(1 / n, rune, besiden(n - 1, rune));
+    // your solution goes here
+}
+
+// Test
+show(besiden(7, heart));
+
+// TASK 2
+// paste your besiden function from the
+// previous question here
+function besiden(n, rune) {
+    return n === 1
+           ? rune
+           : beside_frac(1 / n, rune, besiden(n - 1, rune));
+}
+
+function carpet(n, m, rune) {
+    return stackn(n, besiden(m, rune));
+}
+
+// Test
+show(carpet(7, 5, heart));
+
+
+// TASK 3
+/*
+Enter your answers here
+(answer each question in one or two complete sentences):
+
+(a)
+When she runs the program, a random colour will be allocated to all 100 hearts.
+Each time the runs the program, another random colour will be allocated.
+
+(b)
+The applicative order reduction reads the random_color function first and assigns a fixed colour,
+and thereafter allocating said colour on all hearts.
+
+(c) If Source uses normal order reduction, she would get 10 colored columns of hearts, each column contains the same colour of 10 hearts, but each row contains 10 hearts of a randomly assigned colour
+Normal order reduction will delay the evaluation of functions until the arguments are needed. Thus, 
+
+Normal order reduction sequence:
+carpet(10, 10, random_color(heart)));
+stackn(10, besiden(10, random_color(heart)));
+stackn(10, beside_frac(1/10, random_color(heart), besiden(9, random_color(heart));
+
+the functions are evaluated first before comparing and evaluating the arguments
+on the "3rd" step, the random_color(heart) will be evaluated and assigned a random colour; e.g. red. 
+leftmost heart of the first row will be evaluated red, before the 2nd leftmost is evaluated again, 3rd, 4th... 10th. 
+Hence top row will contain a row of 10 randomly assigned coloured hearts
+
+However, stackn(10, beside_frac()) will stack 10 rows of the top rows, hence repeating the colours previously assigned.
+
+
+*/
+
+
+// TASK 4
+// you may need helper functions
+
+function besiden(n, rune) {
+    return n === 1
+           ? random_color(rune)
+           : beside_frac(1 / n, random_color(rune), besiden(n - 1, random_color(rune)));
+}
+
+// assigning random_color to each run function to the besiden function allows a random colour to be assigned each time the rune is called upon
+
+function randomly_colored_carpet(n, m, rune) {
+    return n === 1
+           ? besiden(m, rune)
+           : stack_frac(1/n, besiden(m, rune), randomly_colored_carpet(n-1, m, rune));
+}
+
+/* evaluating (4,4,heart)
+   when n = 4, stack_frac will place besiden(4, heart) the top 1/4 of the space. Hence a row of 4 randomly colored hearts will form
+   when n = 3, stack_frac will place besiden(4, heart) the 2nd 1/4 of the space. Hence 2nd row of 4 randomly colored hearts will form
+   when n = 2, stack_frac will place besiden(4, heart) the 3rd 1/4 of the space. Hence 3rd row of 4 randomly colored hearts will form
+   when n = 1, besiden(4, heart) will form the last 1/4 of the space. Hence a last row of 4 randomly colored hearts will form
+*/
+// Test
+// should produce a carpet as shown in the title picture of this quest.
+show(randomly_colored_carpet(5, 5, heart));
+show(randomly_colored_carpet(10, 10, heart));
+show(randomly_colored_carpet(20, 20, heart));
