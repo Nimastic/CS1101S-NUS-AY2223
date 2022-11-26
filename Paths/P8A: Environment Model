@@ -1,0 +1,47 @@
+// TASK 1
+An environment is a sequence of frames.
+
+// TASK 2
+A frame is a set of name bindings.
+
+// TASK 3
+The interpreter looks up the variable in the frame that is enclosing the current frame.
+
+// TASK 4
+The interpreter issues an error message "Name not declared".
+
+// TASK 5
+The interpreter uses the same environment in which the function application is evaluated
+
+// TASK 6
+The interpreter uses a new environment, which results from extending the environment stored 
+in the function object that the name f refers to
+
+// TASK 7
+Only the parameets of the function being called.
+
+// TASK 8
+In the current frame if it has a binding of x or the closest surrounding frame that has a binding of x.
+
+// TASK 9
+The environment in which the statement gets evaluated.
+
+// TASK 10
+2
+
+// TASK 11
+10
+
+// TASK 12
+9
+
+// TASK 13
+4
+
+// TASK 14
+10
+
+
+// TASK 15
+3
+
