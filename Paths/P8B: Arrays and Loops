@@ -1,0 +1,94 @@
+// TASK 1
+[1, 8, 3, 4, 5]
+
+// TASK 2
+11
+
+// TASK 3
+[1, 2, 8, 4, 5]
+
+// TASK 4
+A[3][0][2]
+
+// TASK 5
+Recursive Process
+
+// TASK 6
+0 2 4 6
+
+// TASK 7
+Error, because name x is not declared.
+
+// TASK 8
+15
+
+// TASK 9
+function dot_product(A, B) {
+    let sum = 0;
+    for (let i = 0; i < array_length(A); i = i + 1) {
+        sum = sum + A[i] * B[i];
+    }
+    return sum;
+}
+
+
+/*function dot_product(A, B) {
+    const M = [];
+    for (let r = 0; r < 3; r = r + 1) {
+        M[r] = [];
+        for (let c = 0; c < 3; c = c + 1) {
+            M[r][c] = 0;
+            for (let k = 0; k < 3; k = k + 1) {
+                M[r][c] = M[r][c] + A[r][k] * B[k][c];
+            }
+        }
+    }
+} */
+
+
+
+// TASK 10
+function accumulate_array(op, init, A) {
+    let M = 0;
+    for (let i = 0; i < array_length(A); i = i + 1) {
+        if (i === 0) {
+               M = op(init, A[0]); }
+               else 
+              { M = op(M, A[i]); }
+    }
+    return M;
+}
+
+
+
+
+
+// TASK 11
+function filter_array(pred, A) {
+   let M = [];
+   for (let i = 0; i < array_length(A); i = i + 1) {
+       if (pred(A[i])) {
+           M[array_length(M)] = A[i];
+       } else {
+       }
+   }
+   return M;
+}
+
+
+
+
+
+// TASK 12
+function transpose(M) {
+   let F = [];
+   for (let i = 0; i < array_length(M[0]); i = i + 1) {
+       F[i] = [];
+       for (let j = 0; j < array_length(M); j = j + 1) {
+          F[i][j] = M[j][i];
+       }
+   }
+   return F;
+}
+
+
