@@ -1,0 +1,34 @@
+// TASK 1
+function move_forward() {
+    ev3_runForTime(ev3_motorD(), 700, 100);
+    ev3_runForTime(ev3_motorA(), 700, 100);
+    ev3_pause(300);
+}
+
+function turn_left() {
+    ev3_runForTime(ev3_motorD(), 200, 750);
+    ev3_runForTime(ev3_motorA(), 200, 100);
+    //ev3_pause(200);
+}
+
+function turn_right() {
+    ev3_runForTime(ev3_motorA(), 150, 100);
+    ev3_runForTime(ev3_motorA(), 150, 600);
+   // ev3_pause(200);
+}
+
+function line_move() {
+    let light = ev3_reflectedLightIntensity(ev3_colorSensor());
+    while (!ev3_touchSensorPressed(ev3_touchSensor1())) {
+        light = ev3_reflectedLightIntensity(ev3_colorSensor());
+        display(light);
+        if (light > 10 ) { // if light turn left > right
+            turn_left();
+        } else { //else turn right > left
+            turn_right();
+        }      
+
+    }
+}
+
+line_move();
