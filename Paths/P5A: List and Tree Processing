@@ -1,0 +1,127 @@
+// TASK 1
+// Produces a list of integers from a to b,
+// assuming a, b are integers.
+
+function enum_list(a, b) {
+    return a > b
+           ? null
+           : pair(a, enum_list(a + 1, b));
+}
+
+
+display_list(enum_list(0, 5));
+
+
+
+
+
+// TASK 2
+// Produces a list of integers from a to b,
+// assuming a, b are integers.
+
+function enum_list(a, b) {
+    return build_list(n => n + a, b - a + 1);
+}
+
+
+
+display_list(enum_list(0, 0));
+display_list(enum_list(0, 5));
+display_list(enum_list(-1, 1));
+display_list(enum_list(2, 4));
+
+/* 
+
+function enum_list(a, b) {
+    return build_list(list, b + 1, a);
+}
+
+function build_list(fun, n, a) {
+    function build(fun, i, already_built, a) {
+        return i < a
+               ? already_built
+               : build(fun, i - 1, pair((i), already_built), a);
+    }
+    return build(fun, n - 1, null, a);
+}
+
+*/
+
+
+
+
+
+// TASK 3
+// Given a list of integers xs, returns a list that
+//   contains only the odd integers in xs.
+function odd_only(xs) {
+    return filter(x => x % 2 === 1, xs);
+}
+
+odd_only(list(2, 4, 6));
+
+function prime_only(xs) {
+    function square(x) {
+    return x * x;
+}
+    function smallest_divisor(n) {
+    return find_divisor(n, 2);
+}
+    function find_divisor(n, test_divisor) {
+    return square(test_divisor) > n
+           ? n
+           : divides(test_divisor, n)
+           ? test_divisor
+           : find_divisor(n, test_divisor + 1);
+}
+    function divides(a, b) {
+    return b % a === 0;
+}
+    function is_prime(n) {
+    return n === smallest_divisor(n);
+}
+    return filter(x => is_prime(x) && x !== 1, xs);
+}
+
+
+
+
+
+// TASK 4
+const display = custom_display; // DO NOT EDIT.
+
+// Calls display on every item in the list xs.
+function traverse(xs) {
+if (is_null(xs)) { return null;}
+
+else if (is_null(tail(xs))) {
+display(head(xs));
+
+}
+else { display(head(xs));
+return traverse(tail(xs));}
+
+
+}
+
+
+
+
+
+
+// TASK 5
+
+const display = custom_display; // DO NOT EDIT.
+
+// Calls display on every item in the tree xs.
+function traverse(tree) {
+  if (is_null(tree)) {
+    return null;
+  } else if (is_list(tree)) {
+    traverse(head(tree));
+    traverse(tail(tree));
+  } else {
+    return display(tree);
+  }
+}
+
