@@ -1,0 +1,150 @@
+// TASK 1
+// Question 1
+
+function generate_list_of_note(letter_name, list_of_interval) {
+
+    function converter(list_of_intervals, base) {
+        return is_null(list_of_intervals)
+               ? null
+               : pair(
+                   head(list_of_intervals) + base, 
+                   converter( 
+                       tail(list_of_intervals),
+                       head(list_of_intervals) + base
+            )
+        ); 
+    } 
+
+    
+    return append(list(letter_name_to_midi_note(letter_name)), 
+                    converter(list_of_interval, letter_name_to_midi_note(letter_name)));
+    
+    
+} 
+
+const pentatonic_list_of_interval = list(2, 2, 3, 2, 3);
+
+function repeat_pattern(n, xs) {
+    return n === 0 
+           ? null
+           : append(xs, repeat_pattern(n - 1, xs));
+}
+
+/*
+function repeat_pattern(n, pattern, rune) {
+    return n === 0 
+           ? rune 
+           : repeat_pattern(n - 1, pattern, pattern(rune));
+}
+
+function list_to_sound(list_of_midi_note, duration, instrument) {
+    function instrumental(note) {
+        return instrument(note, duration);
+    }
+    return consecutively(map(instrumental, 
+                             list_of_midi_note));
+}*/
+
+function repeated_scale(note, list_of_interval, n, duration, instrument) {
+    const repeated_list_of_interval = repeat_pattern(n, list_of_interval);
+    const total_list_scale = generate_list_of_note(note, repeated_list_of_interval);
+    const actual_list_to_sound = map(note => instrument(note, duration), total_list_scale);
+    return actual_list_to_sound;
+    
+}
+
+
+play(consecutively(repeated_scale("C4", pentatonic_list_of_interval, 2, 1, cello)));
+
+
+// TASK 2
+// Question 2
+set_timeout( () => display("Sorry I'm late!"), 1000);
+set_timeout( () => display("Sawadeekap"), 1000);
+
+function play_matrix(duration, list_of_sounds) {
+    function matrixcolumns(matrix) {
+    return is_null(head(matrix))
+      ? null
+      : pair(map(head, matrix), matrixcolumns(map(tail, matrix)));
+  }
+
+  function columnsound(column_list, sound) {
+    return accumulate(
+      (bool, accum_sound) => bool 
+                ? simultaneously(list(sound, accum_sound)) 
+                : accum_sound, silence_sound(0), column_list);
+  }
+
+  function column_sounds(column_lists, list_of_sounds) {
+    return is_null(column_lists)
+      ? null
+      : pair(
+          columnsound(head(column_lists), head(list_of_sounds)),
+          column_sounds(tail(column_lists), tail(list_of_sounds)));
+  }
+
+  function play_all_column_sounds
+  (column_sounds_list, distance, original_column_sounds_list) {
+    if (is_null(column_sounds_list)) {
+      play_all_column_sounds
+      (original_column_sounds_list, distance, original_column_sounds_list);
+    } else {
+      set_timeout(() => {
+        play_concurrently(head(column_sounds_list));
+        play_all_column_sounds
+        (tail(column_sounds_list), distance, original_column_sounds_list);
+      }, distance * 1000);
+    }
+  }
+
+  const matrix = get_matrix();
+  const column_lists = matrixcolumns(matrix);
+  const column_sounds_list = column_sounds(column_lists, list_of_sounds);
+
+  return play_all_column_sounds
+  (column_sounds_list, duration, column_sounds_list);
+}
+
+
+function stop_matrix() {
+    return clear_all_timeout();
+}
+
+function generate_list_of_note(letter_name, list_of_interval) {
+
+    function converter(list_of_intervals, base) {
+        return is_null(list_of_intervals)
+               ? null
+               : pair(
+                   head(list_of_intervals) + base, 
+                   converter( 
+                       tail(list_of_intervals),
+                       head(list_of_intervals) + base)); 
+        
+    } 
+
+    return append(list(letter_name_to_midi_note(letter_name)), 
+                    converter(list_of_interval, letter_name_to_midi_note(letter_name)));
+    
+} 
+
+const pentatonic_list_of_interval = list(2, 2, 3, 2, 3);
+
+function repeat_pattern(n, xs) {
+    return n === 0 
+           ? null
+           : append(xs, repeat_pattern(n - 1, xs));
+}
+
+function repeated_scale(note, list_of_interval, n, duration, instrument) {
+    const repeated_list_of_interval = repeat_pattern(n, list_of_interval);
+    const total_list_scale = generate_list_of_note(note, repeated_list_of_interval);
+    const actual_list_to_sound = map(note => instrument(note, duration), total_list_scale);
+    return actual_list_to_sound;
+    
+}
+
+const sounds = repeated_scale("C4", pentatonic_list_of_interval, 3, 0.2, cello);
+
+play_matrix(0.5, sounds);
