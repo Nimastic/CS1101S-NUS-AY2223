@@ -1,0 +1,30 @@
+
+// TASK 1
+Error, because it is trying to assign value to the constant x in the statement x = 1;
+
+// TASK 2
+2
+
+// TASK 3
+2
+
+// TASK 4
+3
+
+// TASK 5
+15
+
+// TASK 6
+Error, because it is trying to assign value to the constant p in the statement p = pair(3, 4);
+
+// TASK 7
+[3, [1, 2]]
+
+// TASK 8
+[[1, 2], 4]
+
+// TASK 9
+Assignments to the name my_p are possible, using my_p = pair(3, 4);
+
+// TASK 10
+A cyclic list of elements 1, 2, 3.
