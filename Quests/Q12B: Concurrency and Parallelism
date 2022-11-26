@@ -1,0 +1,26 @@
+// TASK 1
+"B1" "A2" "B2" "A1" "A3" "B3"
+
+// TASK 2
+2
+
+// TASK 3
+6
+
+// TASK 4
+"A1" "A2" "B3" "B4" "A3" "A4" "B1" "B2"
+
+// TASK 5
+All of the above can be the final value of x // wrong
+
+// TASK 6
+{101, 121} // wrong
+
+// TASK 7
+The program always does not display anything, and then always goes into a deadlock
+
+// TASK 8
+The program always display "A1" "A2" "B1" "B2" or "B1" "B2" "A1" "A2", and then always terminates normally.
+
+// TASK 9
+The program always does not display anything, and then always goes into a deadlock. // wrong
