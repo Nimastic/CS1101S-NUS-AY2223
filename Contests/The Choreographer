@@ -1,0 +1,43 @@
+// Fighterjet
+function curves_contest(c) {
+    return draw_points_full_view_proportional(9999 * 2)
+                (fractal(25, c, unit_line));
+}
+
+/*
+function both(c) {
+    return connect_ends(spear(c), fighterjet(c));
+}
+
+function spear(c) {
+    return put_in_standard_position((rotate_around_origin(0, , 0))
+        (connect_rigidly(left, right)));
+} */
+
+function fighterjet(c) {
+    return put_in_standard_position((rotate_around_origin(0, 2.6, 0))
+        (connect_rigidly(left, right)));
+} 
+
+
+function reflect_through_y_axis(curve) {
+    return t => make_point( - x_of(curve(t)), y_of(curve(t))); 
+}
+
+function spearhead(c) {
+    return put_in_standard_position(connect_ends 
+            ((rotate_around_origin(0, - math_PI / 2, 0))(c), (c)));
+
+}
+
+function fractal(level, transformation, curve) {
+  return level === 0 
+        ? curve 
+        : transformation(fractal(level - 1, transformation, curve));
+}
+
+const left = fractal(43, spearhead, unit_line);
+const right = fractal(37, spearhead, unit_line);
+
+// Keep this function call
+curves_contest(fighterjet);
